@@ -3,36 +3,24 @@ package ru.yandex.practicum.filmorate.controller;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import org.springframework.validation.annotation.Validated;
 
-import java.time.LocalDate;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/users")
+@Validated
 public class UserController {
 
     @PostMapping
-    public User createUser(@RequestBody User user) {
-        validateUser(user);
+    public User createUser (@RequestBody @Valid User user) {
         // Логика создания пользователя
         return user; // Вернуть созданного пользователя
     }
 
-    private void validateUser(User user) {
-        if (user.getLogin() == null || user.getLogin().isEmpty()) {
-            throw new ValidationException("Логин не может быть пустым");
-        }
-        if (user.getEmail() == null || !user.getEmail().contains("@")) {
-            throw new ValidationException("Недопустимый email");
-        }
-        if (user.getBirthday() != null && user.getBirthday().isAfter(LocalDate.now())) {
-            throw new ValidationException("Дата рождения не может быть в будущем");
-        }
-    }
-
     @PutMapping
-    public User updateUser(@RequestBody User user) {
-        validateUser(user);
+    public User updateUser (@RequestBody @Valid User user) {
         // Логика обновления пользователя
         return user; // Вернуть обновленного пользователя
     }
