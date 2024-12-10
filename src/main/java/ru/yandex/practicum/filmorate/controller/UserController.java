@@ -13,13 +13,13 @@ import java.util.List;
 public class UserController {
 
     @PostMapping
-    public User createUser (@RequestBody @Valid User user) {
+    public User createUser(@RequestBody @Valid User user) {
         // Логика создания пользователя
         return user; // Вернуть созданного пользователя
     }
 
     @PutMapping
-    public User updateUser (@RequestBody @Valid User user) {
+    public User updateUser(@RequestBody @Valid User user) {
         // Логика обновления пользователя
         return user; // Вернуть обновленного пользователя
     }
