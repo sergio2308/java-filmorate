@@ -30,7 +30,7 @@ public class FilmController {
             throw new ValidationException("Продолжительность должна быть положительной");
         }
     }
-    
+
     @PutMapping
     public Film updateFilm(@RequestBody Film film) {
         // Логика обновления фильма
