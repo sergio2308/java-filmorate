@@ -27,6 +27,7 @@ public class UserController {
             throw new ValidationException("Дата рождения не может быть в будущем");
         }
     }
+    
     @PutMapping
     public User updateUser(@RequestBody User user) {
         // Логика обновления пользователя
