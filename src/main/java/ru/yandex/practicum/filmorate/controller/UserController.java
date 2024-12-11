@@ -13,6 +13,7 @@ public class UserController {
 
     @PostMapping
     public User createUser(@RequestBody User user) {
+        validateUser(user);
         // Логика создания пользователя
         return user; // Вернуть созданного пользователя
     }
@@ -31,6 +32,7 @@ public class UserController {
 
     @PutMapping
     public User updateUser(@RequestBody User user) {
+        validateUser(user);
         // Логика обновления пользователя
         return user; // Вернуть обновленного пользователя
     }

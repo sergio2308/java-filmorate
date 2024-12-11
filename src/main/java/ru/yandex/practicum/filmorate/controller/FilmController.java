@@ -15,6 +15,7 @@ public class FilmController {
 
     @PostMapping
     public Film addFilm(@RequestBody Film film) {
+        validateFilm(film);
         // Логика добавления фильма
         return film; // Вернуть добавленный фильм
     }
@@ -33,6 +34,7 @@ public class FilmController {
 
     @PutMapping
     public Film updateFilm(@RequestBody Film film) {
+        validateFilm(film);
         // Логика обновления фильма
         return film; // Вернуть обновленный фильм
     }
