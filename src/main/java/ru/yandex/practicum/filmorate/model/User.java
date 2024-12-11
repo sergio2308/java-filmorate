@@ -13,14 +13,22 @@ import java.time.LocalDate;
 public class User {
     private int id;
 
-    @NotBlank(message = "Login cannot be blank")
+    @NotBlank(message = "Логин не может быть пустым")
     private String login;
 
     private String name;
 
-    @Email(message = "Email should be valid")
+    @Email(message = "Email должен быть корректным")
     private String email;
 
-    @Past(message = "Birthday must be in the past")
+    @Past(message = "Дата рождения должна быть в прошлом")
     private LocalDate birthday;
+
+    // Конструктор для автоматической установки имени по умолчанию
+    public User(String login, String email, LocalDate birthday) {
+        this.login = login;
+        this.email = email;
+        this.birthday = birthday;
+        this.name = login; // Устанавливаем имя по умолчанию как логин
+    }
 }
