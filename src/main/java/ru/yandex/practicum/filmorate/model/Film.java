@@ -1,23 +1,27 @@
 package ru.yandex.practicum.filmorate.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Past;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.time.LocalDate;
 
 @Data
+@NoArgsConstructor
 public class Film {
     private int id;
 
-    @NotBlank(message = "Название фильма не должно быть пустым")
+    @NotBlank(message = "Film name cannot be blank")
     private String name;
 
-    @NotBlank(message = "Описание фильма не должно быть пустым")
+    @NotBlank(message = "Description cannot be blank")
     private String description;
 
-    @Past(message = "Дата выпуска должна быть в прошлом")
+    @NotNull(message = "Release date cannot be null")
     private LocalDate releaseDate;
 
-    private int duration; // продолжительность в минутах
+    @Positive(message = "Duration must be positive")
+    private int duration;
 }
