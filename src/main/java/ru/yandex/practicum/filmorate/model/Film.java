@@ -8,6 +8,7 @@ import java.time.LocalDate;
 
 @Data
 public class Film {
+    @Positive
     private int id;
     @NotBlank
     private String name;
