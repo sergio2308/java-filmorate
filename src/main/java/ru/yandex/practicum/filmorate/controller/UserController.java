@@ -16,7 +16,7 @@ public class UserController {
         // Логика создания пользователя
         return user; // Вернуть созданного пользователя
     }
-    
+
     private void validateUser(User user) {
         if (user.getLogin() == null || user.getLogin().isEmpty()) {
             throw new ValidationException("Логин не может быть пустым");
