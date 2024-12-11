@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 @Data
 public class User {
-    @Positive
+    @NotNull
     private int id;
     @NotBlank
     @Email
