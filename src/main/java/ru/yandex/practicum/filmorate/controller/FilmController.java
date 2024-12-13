@@ -18,7 +18,6 @@ public class FilmController {
     private int id = 1;
     private Map<Integer, Film> filmsMap = new HashMap<>();
 
-    @ResponseStatus
     @PostMapping
     public Film addFilm(@RequestBody @Valid Film film) {
         int id = nextId();
@@ -40,7 +39,6 @@ public class FilmController {
         }
     }
 
-    @ResponseStatus
     @PutMapping
     public Film updateFilm(@RequestBody Film film) {
         // Логика обновления фильма

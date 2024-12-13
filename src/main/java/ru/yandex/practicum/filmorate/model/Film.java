@@ -12,7 +12,6 @@ import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 public class Film {
     @NotNull
     private int id;
