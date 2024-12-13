@@ -47,7 +47,6 @@ public class FilmController {
     @PutMapping
     public Film updateFilm(@RequestBody Film film) {
         validateFilm(film);
-        
         // Логика обновления фильма
         return film; // Вернуть обновленный фильм
     }
