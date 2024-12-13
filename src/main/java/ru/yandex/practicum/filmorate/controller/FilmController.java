@@ -54,7 +54,7 @@ public class FilmController {
     @GetMapping
     @RequestMapping("/{id}")
     public ResponseEntity<Film> getFilmById(@PathVariable int id) {
-        if(filmsMap.containsKey(id)) {
+        if (filmsMap.containsKey(id)) {
             return ResponseEntity.ok().body(filmsMap.get(id));
         }
         return ResponseEntity.notFound().build();
