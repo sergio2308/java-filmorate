@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -22,8 +23,7 @@ public class FilmController {
 
     @ResponseStatus
     @PostMapping
-    public Film addFilm(@RequestBody Film film) {
-        validateFilm(film);
+    public Film addFilm(@RequestBody @Valid Film film) {
         int id = nextId();
         film.setId(id);
         filmsMap.put(film.getId(), film);
@@ -46,7 +46,6 @@ public class FilmController {
     @ResponseStatus
     @PutMapping
     public Film updateFilm(@RequestBody Film film) {
-        validateFilm(film);
         // Логика обновления фильма
         return film; // Вернуть обновленный фильм
     }
