@@ -16,6 +16,7 @@ import java.time.LocalDate;
 public class Film {
     @NotNull
     private int id;
+    @NotNull
     @NotBlank
     private String name;
     @NotBlank
@@ -24,6 +25,6 @@ public class Film {
     @NotNull
     private LocalDate releaseDate;
     @NotNull
-    @Positive
+    @Positive(message = "Продолжительность должна быть положительной")
     private int duration;
 }
