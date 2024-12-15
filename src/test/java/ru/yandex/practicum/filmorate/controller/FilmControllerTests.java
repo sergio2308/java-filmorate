@@ -1,13 +1,8 @@
+package ru.yandex.practicum.filmorate.controller;
 
-package ru.yandex.practicum.filmorate.model;
-
-import jakarta.validation.Valid;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
-import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
