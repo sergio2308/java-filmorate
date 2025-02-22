@@ -1,16 +1,16 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class UserControllerTests {
 
@@ -18,7 +18,6 @@ public class UserControllerTests {
 
     @BeforeEach
     public void setUp() {
-        userController = new UserController();
     }
 
     @Test
@@ -108,7 +107,7 @@ public class UserControllerTests {
     @Test
     public void testUpdateNonexistentUser() {
         User user = new User();
-        user.setId(999);
+        user.setId(999l);
         user.setEmail("nonexistent@example.com");
         user.setLogin("nonexistentlogin");
         user.setBirthday(LocalDate.of(1990, 1, 1));

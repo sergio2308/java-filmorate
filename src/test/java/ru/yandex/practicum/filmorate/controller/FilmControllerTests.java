@@ -1,10 +1,10 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Assertions;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
@@ -16,7 +16,6 @@ public class FilmControllerTests {
 
     @BeforeEach
     public void setUp() {
-        filmController = new FilmController();
     }
 
     @Test public void testAddFilmSuccessfully() {
@@ -104,7 +103,7 @@ public class FilmControllerTests {
     @Test
     public void testUpdateNonExistentFilm() {
         Film film = new Film();
-        film.setId(100);
+        film.setId(100L);
         film.setName("Non-existent film");
 
         Assertions.assertThrows(NotFoundException.class, () -> {
@@ -122,13 +121,17 @@ public class FilmControllerTests {
 
         Film addedFilm = filmController.addFilm(film);
 
-        Assertions.assertEquals(addedFilm, filmController.getFilmById(addedFilm.getId()).getBody());
+        Assertions.assertEquals(addedFilm, filmController.getFilmById(addedFilm.getId()));
     }
 
     @Test
     public void testGetNonExistentFilmById() {
-        Assertions.assertFalse(filmController.getFilmById(999).getStatusCode().is2xxSuccessful());
+        Assertions.assertThrows(NotFoundException.class, () -> {
+            filmController.getFilmById(999L);
+        });
     }
+
+
 
     @Test
     public void testGetAllFilms() {

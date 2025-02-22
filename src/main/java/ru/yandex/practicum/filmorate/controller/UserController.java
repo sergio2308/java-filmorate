@@ -1,36 +1,73 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
 
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
+@AllArgsConstructor
+@Slf4j
 public class UserController {
 
-    private int id = 1;
-    private Map<Integer, User> usersMap = new HashMap<>();
+    final UserService userService;
 
     @PostMapping
     public User createUser(@RequestBody @Valid User user) {
         validateUser(user);
-        int id = nextId();
-        user.setId(id);
-        if (user.getName() == null) {
-            user.setName(user.getLogin()); // Значение name равно login, если name не задан
-        }
-        usersMap.put(user.getId(), user);
-        return user;
-        // Логика создания пользователя
-        // Вернуть созданного пользователя
+        log.warn("Создание пользователя");
+        return userService.createUser(user);
+    }
+
+    @PutMapping
+    public User updateUser(@RequestBody @Valid User user) {
+        validateUser(user);
+        log.warn("Обновляем пользователя {}", user.getId());
+        return userService.updateUser(user);
+    }
+
+    @GetMapping("/{id}")
+    public User getUserById(@PathVariable Long id) {
+        log.warn("Получение поьзователял по id: {}", id);
+        return userService.getUserById(id);
+    }
+
+    @GetMapping
+    public List<User> getAllUsers() {
+        log.warn("Получение всех пользователей.");
+        return userService.getAllUsers();
+    }
+
+    @PutMapping("/{id}/friends/{friendId}")
+    public void addFriend(@PathVariable Long id, @PathVariable Long friendId) {
+        log.warn("Добавление пользователя {} в друзья к пользователю {}", friendId, id);
+        userService.addFriend(id, friendId);
+    }
+
+    @DeleteMapping("/{id}/friends/{friendId}")
+    public void removeFriend(@PathVariable Long id, @PathVariable Long friendId) {
+        log.warn("Удаление пользователя {} из друзей пользователя {}", friendId, id);
+        userService.removeFriend(id, friendId);
+    }
+
+    @GetMapping("/{id}/friends")
+    public List<User> getFriends(@PathVariable Long id) {
+        log.warn("Получение списка друзей пользователя {}", id);
+        return userService.getFriends(id);
+    }
+
+    @GetMapping("/{id}/friends/common/{otherId}")
+    public List<User> getCommonFriends(@PathVariable Long id, @PathVariable Long otherId) {
+        log.warn("Получение общих друзей между пользователями {} и {}", id, otherId);
+        return userService.getCommonFriends(id, otherId);
     }
 
     private void validateUser(User user) {
@@ -43,25 +80,5 @@ public class UserController {
         if (user.getBirthday() != null && user.getBirthday().isAfter(LocalDate.now())) {
             throw new ValidationException(HttpStatus.BAD_REQUEST, "Дата рождения не может быть в будущем");
         }
-    }
-
-    @PutMapping
-    public User updateUser(@RequestBody User user) {
-        if (!usersMap.containsKey(user.getId())) {
-            throw new NotFoundException(HttpStatus.NOT_FOUND, "Фильм не найден с ID: " + user.getId());
-        }
-        validateUser(user);
-        // Логика обновления пользователя
-        return user; // Вернуть обновленного пользователя
-    }
-
-    @GetMapping
-    public List<User> getAllUsers() {
-        // Логика получения всех пользователей
-        return List.copyOf(usersMap.values()); // Вернуть список пользователей
-    }
-
-    private int nextId() {
-        return id++;
     }
 }
