@@ -107,7 +107,7 @@ public class UserControllerTests {
     @Test
     public void testUpdateNonexistentUser() {
         User user = new User();
-        user.setId(999l);
+        user.setId(999L);
         user.setEmail("nonexistent@example.com");
         user.setLogin("nonexistentlogin");
         user.setBirthday(LocalDate.of(1990, 1, 1));
