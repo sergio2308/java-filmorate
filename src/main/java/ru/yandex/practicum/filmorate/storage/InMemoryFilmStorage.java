@@ -15,7 +15,7 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     private Map<Long, Film> filmsMap = new HashMap<Long, Film>();
     private Long id = 1L;
-    
+
     @Override
     public Film addFilm(Film film) {
         @NotNull Long id = nextId();
@@ -42,7 +42,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     public List<Film> getAllFilms() {
         return List.copyOf(filmsMap.values()); // Вернуть список всех фильмов
     }
-    
+
     private @NotNull Long nextId() {
         return id++;
     }
