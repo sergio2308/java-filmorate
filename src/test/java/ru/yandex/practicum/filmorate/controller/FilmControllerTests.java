@@ -6,6 +6,10 @@ import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -13,9 +17,16 @@ import java.util.List;
 public class FilmControllerTests {
 
     private FilmController filmController;
+    private FilmService filmService;
+    private UserService userService;
 
     @BeforeEach
     public void setUp() {
+        InMemoryFilmStorage filmStorage = new InMemoryFilmStorage();
+        InMemoryUserStorage userStorage = new InMemoryUserStorage();
+        userService = new UserService(userStorage);
+        filmService = new FilmService(filmStorage, userService);
+        filmController = new FilmController(filmService, userService);
     }
 
     @Test public void testAddFilmSuccessfully() {
@@ -102,14 +113,20 @@ public class FilmControllerTests {
 
     @Test
     public void testUpdateNonExistentFilm() {
+        // Создаем фильм с корректными данными
         Film film = new Film();
-        film.setId(100L);
+        film.setId(999L); // Устанавливаем несуществующий ID
         film.setName("Non-existent film");
+        film.setDescription("This is a valid description."); // Убедитесь, что описание не превышает 200 символов
+        film.setReleaseDate(LocalDate.of(2000, 1, 1));
+        film.setDuration(120);
 
+        // Проверяем, что при обновлении несуществующего фильма выбрасывается NotFoundException
         Assertions.assertThrows(NotFoundException.class, () -> {
             filmController.updateFilm(film);
         });
     }
+
 
     @Test
     public void testGetFilmByIdSuccessfully() {
