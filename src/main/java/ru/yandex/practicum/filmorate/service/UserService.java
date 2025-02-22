@@ -66,7 +66,7 @@ public class UserService {
         User otherUser  = getUserById(otherId);
 
         return user.getFriends().stream()
-                .filter(otherUser .getFriends()::contains)
+                .filter(otherUser.getFriends()::contains)
                 .map(userStorage::getUserById)
                 .collect(Collectors.toList());
     }
