@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 public class FilmService {
 
     final FilmStorage filmStorage;
-    final UserService userService;
 
     public Film addFilm(Film film) {
         return filmStorage.addFilm(film);
@@ -33,7 +32,7 @@ public class FilmService {
             String error = String.format("Фильм с id %d не найден", id);
             throw new NotFoundException(HttpStatus.NOT_FOUND, error);
         }
-       return filmStorage.getFilmById(id);
+       return filmById;
     }
 
     public List<Film> getAllFilms() {
@@ -43,11 +42,13 @@ public class FilmService {
     public void addLike(Long filmId, Long userId) {
         Film film = getFilmById(filmId);
         film.getLikes().add(userId);
+        filmStorage.updateFilm(film);
     }
 
     public void removeLike(Long filmId, Long userId) {
         Film film = getFilmById(filmId);
         film.getLikes().remove(userId);
+        filmStorage.updateFilm(film);
     }
 
     public List<Film> getPopularFilms(int count) {

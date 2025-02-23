@@ -18,7 +18,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public Map<String, String> processNotFound(NotFoundException nfe) {
         HashMap<String, String> response = new HashMap<>();
-        response.put("error,", "Не найден");
+        response.put("error", "Не найден");
         return response;
     }
 
@@ -26,7 +26,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public Map<String, String> processNotValid(ValidationException ve) {
         HashMap<String, String> response = new HashMap<>();
-        response.put("error,", "Валидация не пройдена");
+        response.put("error", "Валидация не пройдена");
         return response;
     }
 
@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
     public Map<String, String> processAnyException(Throwable te) {
         log.error("Ошибка: {}", te.getMessage());
         HashMap<String, String> response = new HashMap<>();
-        response.put("error,", "Произошла неизвестная ошибка");
+        response.put("error", "Произошла неизвестная ошибка");
         return response;
     }
 }

@@ -52,6 +52,8 @@ public class UserService {
         User friend = getUserById(friendId);
         user.getFriends().remove(friendId);
         friend.getFriends().remove(userId);
+        userStorage.updateUser(user);
+        userStorage.updateUser(friend);
     }
 
     public List<User> getFriends(Long userId) {
