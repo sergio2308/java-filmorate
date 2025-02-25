@@ -1,24 +1,29 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
 import java.time.LocalDate;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 public class UserControllerTests {
 
     private UserController userController;
+    private UserService userService;
 
     @BeforeEach
     public void setUp() {
-        userController = new UserController();
+        InMemoryUserStorage userStorage = new InMemoryUserStorage();
+        userService = new UserService(userStorage);
+        userController = new UserController(userService);
     }
 
     @Test
@@ -108,14 +113,14 @@ public class UserControllerTests {
     @Test
     public void testUpdateNonexistentUser() {
         User user = new User();
-        user.setId(999);
+        user.setId(999L);
         user.setEmail("nonexistent@example.com");
         user.setLogin("nonexistentlogin");
         user.setBirthday(LocalDate.of(1990, 1, 1));
 
         NotFoundException exception = assertThrows(NotFoundException.class, () -> userController.updateUser(user));
         assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());
-        assertEquals("Фильм не найден с ID: 999", exception.getMessage());
+        assertEquals("Пользователь не найден с ID: 999", exception.getMessage());
     }
 
     @Test
