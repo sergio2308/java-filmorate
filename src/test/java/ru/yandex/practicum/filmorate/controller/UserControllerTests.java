@@ -3,16 +3,19 @@ package ru.yandex.practicum.filmorate.controller;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
+import org.springframework.jdbc.core.JdbcTemplate;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.UserDbStorage;
 
 import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 public class UserControllerTests {
 
@@ -21,9 +24,12 @@ public class UserControllerTests {
 
     @BeforeEach
     public void setUp() {
+        JdbcTemplate jdbcTemplate = mock(JdbcTemplate.class);
+        UserDbStorage userDbStorage = mock(UserDbStorage.class);
         InMemoryUserStorage userStorage = new InMemoryUserStorage();
-        userService = new UserService(userStorage);
-        userController = new UserController(userService);
+
+        userService = new UserService(jdbcTemplate, userDbStorage, userStorage);
+        userController = new UserController(jdbcTemplate, userService);
     }
 
     @Test

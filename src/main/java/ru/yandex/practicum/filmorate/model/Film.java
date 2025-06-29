@@ -5,14 +5,17 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Film {
@@ -28,5 +31,7 @@ public class Film {
     @NotNull
     @Positive(message = "Продолжительность должна быть положительной")
     private int duration;
+    private Rating rating;
+    private List<Genre> genres;
     private Set<Long> likes = new HashSet<>();
 }

@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
@@ -17,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @Slf4j
 public class UserController {
-
+    private JdbcTemplate jdbcTemplate;
     final UserService userService;
 
     @PostMapping

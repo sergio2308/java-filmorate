@@ -2,9 +2,11 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.storage.FilmDbStorage;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import java.util.Comparator;
@@ -15,6 +17,9 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class FilmService {
+    private JdbcTemplate jdbcTemplate;
+
+    private FilmDbStorage filmDbStorage;
 
     final FilmStorage filmStorage;
 
