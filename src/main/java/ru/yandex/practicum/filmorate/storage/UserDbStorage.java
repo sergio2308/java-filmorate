@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.storage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
-import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -13,7 +12,7 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import java.sql.*;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 
 @Component
 @Primary
@@ -24,7 +23,7 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public User createUser(User user) {
-        String sql = "INSERT INTO Users (email, login, name, birthday) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO users (email, login, name, birthday) VALUES (?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
@@ -36,13 +35,13 @@ public class UserDbStorage implements UserStorage {
             return stmt;
         }, keyHolder);
 
-        user.setId(Objects.requireNonNull(keyHolder.getKey()).longValue());
+        user.setId(keyHolder.getKey().longValue());
         return user;
     }
 
     @Override
     public User updateUser(User user) {
-        String sql = "UPDATE Users SET email = ?, login = ?, name = ?, birthday = ? WHERE user_id = ?";
+        String sql = "UPDATE users SET email = ?, login = ?, name = ?, birthday = ? WHERE user_id = ?";
         int updated = jdbcTemplate.update(sql,
                 user.getEmail(),
                 user.getLogin(),
@@ -51,14 +50,14 @@ public class UserDbStorage implements UserStorage {
                 user.getId());
 
         if (updated == 0) {
-            throw new NotFoundException(HttpStatus.NOT_FOUND, "User with id " + user.getId() + " not found");
+            throw new NotFoundException("User with id " + user.getId() + " not found");
         }
         return user;
     }
 
     @Override
     public List<User> getAllUsers() {
-        String sql = "SELECT * FROM Users";
+        String sql = "SELECT * FROM users";
         return jdbcTemplate.query(sql, (rs, rowNum) -> mapRowToUser(rs));
     }
 
@@ -68,7 +67,7 @@ public class UserDbStorage implements UserStorage {
         try {
             return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> mapRowToUser(rs), id);
         } catch (Exception e) {
-            throw new NotFoundException(HttpStatus.NOT_FOUND, "User with id " + id + " not found");
+            throw new NotFoundException("User with id " + id + " not found");
         }
     }
 

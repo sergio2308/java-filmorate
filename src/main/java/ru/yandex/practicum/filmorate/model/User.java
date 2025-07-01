@@ -30,4 +30,11 @@ public class User {
     @Past
     private LocalDate birthday;
     private Set<Long> friends = new HashSet<>();
+
+    public Set<Long> getFriends() {
+        if (friends == null) {
+            friends = new HashSet<>();
+        }
+        return friends;
+    }
 }

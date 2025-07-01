@@ -1,4 +1,12 @@
-CREATE TABLE IF NOT EXISTS Users (
+DROP TABLE IF EXISTS Film_likes;
+DROP TABLE IF EXISTS Friends;
+DROP TABLE IF EXISTS Film_genre;
+DROP TABLE IF EXISTS Films;
+DROP TABLE IF EXISTS Genres;
+DROP TABLE IF EXISTS Users;
+DROP TABLE IF EXISTS Mpa;
+
+CREATE TABLE Users (
   user_id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
   email VARCHAR NOT NULL,
   login VARCHAR NOT NULL,
@@ -6,32 +14,27 @@ CREATE TABLE IF NOT EXISTS Users (
   birthday DATE NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS Rating (
-  rating_id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
+CREATE TABLE Mpa (
+  mpa_id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
   name VARCHAR NOT NULL
 );
 
-INSERT INTO Rating (name) VALUES ('G'), ('PG'), ('PG-13'), ('R'), ('NC-17');
-
-CREATE TABLE IF NOT EXISTS Films (
+CREATE TABLE Films (
   film_id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
   name VARCHAR NOT NULL,
   description VARCHAR NOT NULL,
   release_date DATE NOT NULL,
   duration INTEGER NOT NULL,
-  rating_id INTEGER NOT NULL,
-  CONSTRAINT fk_films_rating FOREIGN KEY (rating_id) REFERENCES Rating(rating_id)
+  mpa_id INTEGER NOT NULL,
+  CONSTRAINT fk_films_mpa FOREIGN KEY (mpa_id) REFERENCES Mpa(mpa_id)
 );
 
-CREATE TABLE IF NOT EXISTS Genres (
+CREATE TABLE Genres (
   genre_id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
   name VARCHAR NOT NULL
 );
 
-INSERT INTO Genres (name) VALUES
-('Комедия'), ('Драма'), ('Мультфильм'), ('Триллер'), ('Документальный'), ('Боевик');
-
-CREATE TABLE IF NOT EXISTS Film_genre (
+CREATE TABLE Film_genre (
   film_id INTEGER NOT NULL,
   genre_id INTEGER NOT NULL,
   PRIMARY KEY (film_id, genre_id),
@@ -39,7 +42,7 @@ CREATE TABLE IF NOT EXISTS Film_genre (
   CONSTRAINT fk_fg_genre FOREIGN KEY (genre_id) REFERENCES Genres(genre_id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS Friends (
+CREATE TABLE Friends (
   user_id INTEGER NOT NULL,
   friend_id INTEGER NOT NULL,
   status BOOLEAN NOT NULL,
@@ -48,7 +51,7 @@ CREATE TABLE IF NOT EXISTS Friends (
   CONSTRAINT fk_friends_friend FOREIGN KEY (friend_id) REFERENCES Users(user_id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS Likes (
+CREATE TABLE Film_likes (
   film_id INTEGER NOT NULL,
   user_id INTEGER NOT NULL,
   PRIMARY KEY (film_id, user_id),

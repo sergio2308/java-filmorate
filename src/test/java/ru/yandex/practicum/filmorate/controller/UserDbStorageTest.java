@@ -10,6 +10,7 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserDbStorage;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -24,11 +25,12 @@ class UserDbStorageTest {
 
     @Test
     public void testFindUserById() {
-        User newUser = User.builder()
-                .email("user@email.ru")
-                .login("user")
-                .name("User Name")
-                .birthday(Timestamp.valueOf(LocalDateTime.now().minusYears(20)))
+        User.UserBuilder builder = User.builder();
+        builder.email("user@email.ru");
+        builder.login("user");
+        builder.name("User Name");
+        builder.birthday(LocalDate.now().minusYears(20));
+        User newUser = builder
                 .build();
 
         userStorage.createUser(newUser);
@@ -43,11 +45,12 @@ class UserDbStorageTest {
 
     @Test
     public void testUpdateUser() {
-        User user = User.builder()
-                .email("user@email.ru")
-                .login("user")
-                .name("User Name")
-                .birthday(Timestamp.valueOf(LocalDateTime.now().minusYears(20)))
+        User.UserBuilder builder = User.builder();
+        builder.email("user@email.ru");
+        builder.login("user");
+        builder.name("User Name");
+        builder.birthday(LocalDate.now().minusYears(20));
+        User user = builder
                 .build();
 
         userStorage.createUser(user);

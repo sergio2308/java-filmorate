@@ -8,6 +8,8 @@ import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.service.GenreService;
+import ru.yandex.practicum.filmorate.service.MpaService;
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.storage.*;
 import static org.mockito.Mockito.mock;
@@ -20,6 +22,8 @@ public class FilmControllerTests {
     private FilmController filmController;
     private FilmService filmService;
     private UserService userService;
+    private MpaService mpaService;
+    private GenreService genreService;
 
 
     @BeforeEach
@@ -28,7 +32,7 @@ public class FilmControllerTests {
         FilmDbStorage filmDbStorage = mock(FilmDbStorage.class);
         FilmStorage filmStorage = new InMemoryFilmStorage();
 
-        filmService = new FilmService(jdbcTemplate, filmDbStorage, filmStorage);
+        filmService = new FilmService(jdbcTemplate, filmDbStorage, filmStorage, mpaService, genreService);
 
         JdbcTemplate jdbcTemplateUser = mock(JdbcTemplate.class);
         UserDbStorage userDbStorage = mock(UserDbStorage.class);
@@ -36,7 +40,7 @@ public class FilmControllerTests {
 
         userService = new UserService(jdbcTemplateUser, userDbStorage, userStorage);
 
-        filmController = new FilmController(filmService, userService);
+        filmController = new FilmController(filmService, userService, genreService, mpaService);
     }
 
 

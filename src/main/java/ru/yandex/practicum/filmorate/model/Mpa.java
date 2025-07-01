@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Rating {
+public class Mpa {
     private Integer id;
     private String name;
 }
