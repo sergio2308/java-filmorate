@@ -68,7 +68,7 @@ public class FilmControllerTests {
         film.setReleaseDate(LocalDate.of(2000, 1, 1));
         film.setDuration(120);
 
-        Exception exception = Assertions.assertThrows(ValidationException.class, () -> {
+        Exception exception = Assertions.assertThrows(NotFoundException.class, () -> {
             filmController.addFilm(film);
         });
         Assertions.assertEquals("Название не может быть пустым", exception.getMessage());
