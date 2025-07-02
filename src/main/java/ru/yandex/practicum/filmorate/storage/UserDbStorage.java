@@ -12,7 +12,6 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import java.sql.*;
 import java.util.List;
-import java.util.Optional;
 
 @Component
 @Primary
