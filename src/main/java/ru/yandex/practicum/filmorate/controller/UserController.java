@@ -3,7 +3,7 @@ package ru.yandex.practicum.filmorate.controller;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
@@ -17,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @Slf4j
 public class UserController {
-
+    private JdbcTemplate jdbcTemplate;
     final UserService userService;
 
     @PostMapping
@@ -48,6 +48,7 @@ public class UserController {
 
     @PutMapping("/{id}/friends/{friendId}")
     public void addFriend(@PathVariable Long id, @PathVariable Long friendId) {
+        validateUser(userService.getUserById(friendId));
         log.warn("Добавление пользователя {} в друзья к пользователю {}", friendId, id);
         userService.addFriend(id, friendId);
     }
@@ -61,6 +62,7 @@ public class UserController {
     @GetMapping("/{id}/friends")
     public List<User> getFriends(@PathVariable Long id) {
         log.warn("Получение списка друзей пользователя {}", id);
+        userService.getUserById(id);
         return userService.getFriends(id);
     }
 
@@ -72,13 +74,13 @@ public class UserController {
 
     private void validateUser(User user) {
         if (user.getLogin() == null || user.getLogin().isEmpty() || user.getLogin().isBlank()) {
-            throw new ValidationException(HttpStatus.BAD_REQUEST, "Логин не может быть пустым");
+            throw new ValidationException("Логин не может быть пустым");
         }
         if (user.getEmail() == null || !user.getEmail().contains("@")) {
-            throw new ValidationException(HttpStatus.BAD_REQUEST, "Недопустимый email");
+            throw new ValidationException("Недопустимый email");
         }
         if (user.getBirthday() != null && user.getBirthday().isAfter(LocalDate.now())) {
-            throw new ValidationException(HttpStatus.BAD_REQUEST, "Дата рождения не может быть в будущем");
+            throw new ValidationException("Дата рождения не может быть в будущем");
         }
     }
 }

@@ -3,13 +3,16 @@ package ru.yandex.practicum.filmorate.controller;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.jdbc.core.JdbcTemplate;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.service.GenreService;
+import ru.yandex.practicum.filmorate.service.MpaService;
 import ru.yandex.practicum.filmorate.service.UserService;
-import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.*;
+import static org.mockito.Mockito.mock;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,15 +22,28 @@ public class FilmControllerTests {
     private FilmController filmController;
     private FilmService filmService;
     private UserService userService;
+    private MpaService mpaService;
+    private GenreService genreService;
+
 
     @BeforeEach
     public void setUp() {
-        InMemoryFilmStorage filmStorage = new InMemoryFilmStorage();
-        InMemoryUserStorage userStorage = new InMemoryUserStorage();
-        userService = new UserService(userStorage);
-        filmService = new FilmService(filmStorage);
-        filmController = new FilmController(filmService, userService);
+        JdbcTemplate jdbcTemplate = mock(JdbcTemplate.class);
+        FilmDbStorage filmDbStorage = mock(FilmDbStorage.class);
+        FilmStorage filmStorage = new InMemoryFilmStorage();
+
+        filmService = new FilmService(jdbcTemplate, filmDbStorage, filmStorage, mpaService, genreService);
+
+        JdbcTemplate jdbcTemplateUser = mock(JdbcTemplate.class);
+        UserDbStorage userDbStorage = mock(UserDbStorage.class);
+        UserStorage userStorage = new InMemoryUserStorage();
+
+        userService = new UserService(jdbcTemplateUser, userDbStorage, userStorage);
+
+        filmController = new FilmController(filmService, userService, genreService, mpaService);
     }
+
+
 
     @Test public void testAddFilmSuccessfully() {
         Film film = new Film();

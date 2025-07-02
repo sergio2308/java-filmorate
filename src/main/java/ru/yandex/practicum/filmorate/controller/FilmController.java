@@ -1,13 +1,16 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.service.GenreService;
+import ru.yandex.practicum.filmorate.service.MpaService;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import java.time.LocalDate;
@@ -15,12 +18,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/films")
+@AllArgsConstructor
 @Slf4j
-@RequiredArgsConstructor
 public class FilmController {
+    private final FilmService filmService;
+    private final UserService userService;
+    private final GenreService genreService;
+    private final MpaService mpaService;
 
-    final FilmService filmService;
-    final UserService userService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -75,17 +80,33 @@ public class FilmController {
 
     private void validateFilm(Film film) {
         if (film.getName() == null || film.getName().isEmpty() || film.getName().isBlank()) {
-            throw new ValidationException(HttpStatus.BAD_REQUEST, "Название фильма не может быть пустым");
+            throw new ValidationException("Название фильма не может быть пустым");
         }
-        if (film.getDescription() == null || film.getDescription().length() > 200 || film.getDescription().isEmpty()
-                || film.getDescription().isBlank()) {
-            throw new ValidationException(HttpStatus.BAD_REQUEST, "Описание не должно превышать 200 символов");
+        if (film.getDescription() == null || film.getDescription().isBlank()) {
+            throw new ValidationException("Описание не может быть пустым");
+        }
+        if (film.getDescription().length() > 200) {
+            throw new ValidationException("Описание не должно превышать 200 символов");
         }
         if (film.getReleaseDate() == null || film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
-            throw new ValidationException(HttpStatus.BAD_REQUEST, "Дата выхода недействительна");
+            throw new ValidationException("Дата выхода недействительна");
         }
         if (film.getDuration() <= 0) {
-            throw new ValidationException(HttpStatus.BAD_REQUEST, "Продолжительность должна быть положительной");
+            throw new ValidationException("Продолжительность должна быть положительной");
+        }
+
+        // Проверка рейтинга
+        if (film.getMpa() == null || film.getMpa().getId() == null) {
+            throw new ValidationException("Рейтинг не может быть пустым");
+        }
+
+        // Проверка жанров
+        if (film.getGenres() != null) {
+            for (Genre genre : film.getGenres()) {
+                if (genre.getId() == null) {
+                    throw new ValidationException("ID жанра не может быть пустым");
+                }
+            }
         }
     }
 }
