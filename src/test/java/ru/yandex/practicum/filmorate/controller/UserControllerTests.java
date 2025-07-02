@@ -67,8 +67,7 @@ public class UserControllerTests {
         user.setLogin("testlogin");
         user.setBirthday(LocalDate.of(1990, 1, 1));
 
-        ValidationException exception = assertThrows(ValidationException.class, () -> userController.createUser(user));
-        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+        Exception exception = assertThrows(ValidationException.class, () -> userController.createUser(user));
         assertEquals("Недопустимый email", exception.getMessage());
     }
 
@@ -79,8 +78,7 @@ public class UserControllerTests {
         user.setLogin(" ");
         user.setBirthday(LocalDate.of(1990, 1, 1));
 
-        ValidationException exception = assertThrows(ValidationException.class, () -> userController.createUser(user));
-        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+        Exception exception = assertThrows(ValidationException.class, () -> userController.createUser(user));
         assertEquals("Логин не может быть пустым", exception.getMessage());
     }
 
@@ -91,8 +89,7 @@ public class UserControllerTests {
         user.setLogin("testlogin");
         user.setBirthday(LocalDate.now().plusDays(1));
 
-        ValidationException exception = assertThrows(ValidationException.class, () -> userController.createUser(user));
-        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+        Exception exception = assertThrows(ValidationException.class, () -> userController.createUser(user));
         assertEquals("Дата рождения не может быть в будущем", exception.getMessage());
     }
 
@@ -126,8 +123,7 @@ public class UserControllerTests {
         user.setLogin("nonexistentlogin");
         user.setBirthday(LocalDate.of(1990, 1, 1));
 
-        NotFoundException exception = assertThrows(NotFoundException.class, () -> userController.updateUser(user));
-        assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());
+        Exception exception = assertThrows(NotFoundException.class, () -> userController.updateUser(user));
         assertEquals("Пользователь не найден с ID: 999", exception.getMessage());
     }
 

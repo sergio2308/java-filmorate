@@ -68,9 +68,10 @@ public class FilmControllerTests {
         film.setReleaseDate(LocalDate.of(2000, 1, 1));
         film.setDuration(120);
 
-        Assertions.assertThrows(ValidationException.class, () -> {
+        Exception exception = Assertions.assertThrows(ValidationException.class, () -> {
             filmController.addFilm(film);
         });
+        Assertions.assertEquals("Название не может быть пустым", exception.getMessage());
     }
 
     @Test
@@ -130,20 +131,17 @@ public class FilmControllerTests {
 
     @Test
     public void testUpdateNonExistentFilm() {
-        // Создаем фильм с корректными данными
         Film film = new Film();
-        film.setId(999L); // Устанавливаем несуществующий ID
+        film.setId(999L);
         film.setName("Non-existent film");
-        film.setDescription("This is a valid description."); // Убедитесь, что описание не превышает 200 символов
+        film.setDescription("This is a valid description.");
         film.setReleaseDate(LocalDate.of(2000, 1, 1));
         film.setDuration(120);
 
-        // Проверяем, что при обновлении несуществующего фильма выбрасывается NotFoundException
         Assertions.assertThrows(NotFoundException.class, () -> {
             filmController.updateFilm(film);
         });
     }
-
 
     @Test
     public void testGetFilmByIdSuccessfully() {
