@@ -154,7 +154,7 @@ public class FilmControllerTests {
         film.setDescription("Description");
         film.setReleaseDate(LocalDate.of(2000, 1, 1));
         film.setDuration(120);
-
+        film.setMpa(new Mpa(1, "G"));
         Film addedFilm = filmController.addFilm(film);
 
         Assertions.assertEquals(addedFilm, filmController.getFilmById(addedFilm.getId()));
