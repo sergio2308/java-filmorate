@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.service.GenreService;
 import ru.yandex.practicum.filmorate.service.MpaService;
@@ -52,6 +53,7 @@ public class FilmControllerTests {
         film.setDescription("This is a valid description.");
         film.setReleaseDate(LocalDate.of(2000, 1, 1));
         film.setDuration(120);
+        film.setMpa(new Mpa(1, "G")); // Добавляем обязательный MPA
 
         Film addedFilm = filmController.addFilm(film);
 
@@ -68,10 +70,10 @@ public class FilmControllerTests {
         film.setReleaseDate(LocalDate.of(2000, 1, 1));
         film.setDuration(120);
 
-        Exception exception = Assertions.assertThrows(NotFoundException.class, () -> {
+        Exception exception = Assertions.assertThrows(ValidationException.class, () -> {
             filmController.addFilm(film);
         });
-        Assertions.assertEquals("Название не может быть пустым", exception.getMessage());
+        Assertions.assertEquals("Название фильма не может быть пустым", exception.getMessage());
     }
 
     @Test
@@ -120,9 +122,9 @@ public class FilmControllerTests {
         film.setDescription("Description");
         film.setReleaseDate(LocalDate.of(2000, 1, 1));
         film.setDuration(100);
+        film.setMpa(new Mpa(1, "G")); // Добавляем обязательный MPA
 
         Film addedFilm = filmController.addFilm(film);
-
         addedFilm.setName("Updated Film Name");
         Film updatedFilm = filmController.updateFilm(addedFilm);
 
@@ -134,13 +136,15 @@ public class FilmControllerTests {
         Film film = new Film();
         film.setId(999L);
         film.setName("Non-existent film");
-        film.setDescription("This is a valid description.");
+        film.setDescription("Valid description");
         film.setReleaseDate(LocalDate.of(2000, 1, 1));
         film.setDuration(120);
+        film.setMpa(new Mpa(1, "G"));
 
-        Assertions.assertThrows(NotFoundException.class, () -> {
+        Exception exception = Assertions.assertThrows(NotFoundException.class, () -> {
             filmController.updateFilm(film);
         });
+        Assertions.assertTrue(exception.getMessage().contains("не найден"));
     }
 
     @Test
@@ -162,7 +166,6 @@ public class FilmControllerTests {
             filmController.getFilmById(999L);
         });
     }
-
 
     @Test
     public void testGetAllFilms() {

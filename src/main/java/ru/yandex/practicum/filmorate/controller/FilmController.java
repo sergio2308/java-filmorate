@@ -96,18 +96,8 @@ public class FilmController {
             throw new ValidationException("Продолжительность должна быть положительной");
         }
 
-        // Проверка рейтинга
         if (film.getMpa() == null || film.getMpa().getId() == null) {
-            throw new NotFoundException("Рейтинг не может быть пустым");
-        }
-
-        // Проверка жанров
-        if (film.getGenres() != null) {
-            for (Genre genre : film.getGenres()) {
-                if (genre.getId() == null) {
-                    throw new ValidationException("ID жанра не может быть пустым");
-                }
-            }
+            throw new ValidationException("Рейтинг MPA обязателен");
         }
     }
 }
