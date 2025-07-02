@@ -174,12 +174,14 @@ public class FilmControllerTests {
         film1.setDescription("Description");
         film1.setReleaseDate(LocalDate.of(2000, 1, 1));
         film1.setDuration(100);
+        film1.setMpa(new Mpa(1, "G"));
 
         Film film2 = new Film();
         film2.setName("Film 2");
         film2.setDescription("Another Description");
         film2.setReleaseDate(LocalDate.of(2002, 5, 20));
         film2.setDuration(150);
+        film2.setMpa(new Mpa(1, "G"));
 
         filmController.addFilm(film1);
         filmController.addFilm(film2);
