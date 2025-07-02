@@ -25,19 +25,13 @@ public class MpaDbStorage implements MpaStorage {
     public Mpa getMpaById(Integer id) {
         String sql = "SELECT * FROM Mpa WHERE mpa_id = ?";
         try {
-            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new Mpa(
-                    rs.getInt("mpa_id"),
-                    rs.getString("name")
-            ), id);
+            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new Mpa(rs.getInt("mpa_id"), rs.getString("name")), id);
         } catch (Exception e) {
             throw new NotFoundException("Рейтинг с id " + id + " не найден");
         }
     }
 
     private Mpa mapRowToMpa(ResultSet rs) throws SQLException {
-        return Mpa.builder()
-                .id(rs.getInt("mpa_id"))
-                .name(rs.getString("name"))
-                .build();
+        return Mpa.builder().id(rs.getInt("mpa_id")).name(rs.getString("name")).build();
     }
 }

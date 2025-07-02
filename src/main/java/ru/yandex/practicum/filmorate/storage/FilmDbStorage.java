@@ -60,13 +60,7 @@ public class FilmDbStorage implements FilmStorage {
         validateGenresExist(film.getGenres());
         validateMpaExist(film.getMpa());
         String sql = "UPDATE Films SET name = ?, description = ?, release_date = ?, duration = ?, mpa_id = ? WHERE film_id = ?";
-        int updated = jdbcTemplate.update(sql,
-                film.getName(),
-                film.getDescription(),
-                Date.valueOf(film.getReleaseDate()),
-                film.getDuration(),
-                film.getMpa().getId(),
-                film.getId());
+        int updated = jdbcTemplate.update(sql, film.getName(), film.getDescription(), Date.valueOf(film.getReleaseDate()), film.getDuration(), film.getMpa().getId(), film.getId());
 
         if (updated == 0) {
             throw new NotFoundException("Фильм с id " + film.getId() + " не найден");
@@ -116,11 +110,8 @@ public class FilmDbStorage implements FilmStorage {
         Film film = films.get(0);
 
         // Загружаем жанры
-        String sqlGenres = "SELECT g.genre_id, g.name FROM Genres g " +
-                "JOIN Film_genre fg ON g.genre_id = fg.genre_id " +
-                "WHERE fg.film_id = ?";
-        List<Genre> genres = jdbcTemplate.query(sqlGenres, (rs, rowNum) ->
-                new Genre(rs.getInt("genre_id"), rs.getString("name")), id);
+        String sqlGenres = "SELECT g.genre_id, g.name FROM Genres g " + "JOIN Film_genre fg ON g.genre_id = fg.genre_id " + "WHERE fg.film_id = ?";
+        List<Genre> genres = jdbcTemplate.query(sqlGenres, (rs, rowNum) -> new Genre(rs.getInt("genre_id"), rs.getString("name")), id);
         film.setGenres(genres);
 
         // Загружаем рейтинг MPA с обработкой отсутствия
@@ -130,8 +121,7 @@ public class FilmDbStorage implements FilmStorage {
         String sqlMpa = "SELECT mpa_id, name FROM Mpa WHERE mpa_id = ?";
         Mpa mpa;
         try {
-            mpa = jdbcTemplate.queryForObject(sqlMpa, (rs, rowNum) ->
-                    new Mpa(rs.getInt("mpa_id"), rs.getString("name")), film.getMpa().getId());
+            mpa = jdbcTemplate.queryForObject(sqlMpa, (rs, rowNum) -> new Mpa(rs.getInt("mpa_id"), rs.getString("name")), film.getMpa().getId());
         } catch (EmptyResultDataAccessException e) {
             throw new NotFoundException("Рейтинг MPA с id " + film.getMpa().getId() + " не найден");
         }
@@ -152,17 +142,13 @@ public class FilmDbStorage implements FilmStorage {
 
         for (Film film : films) {
             // Загружаем жанры
-            String sqlGenres = "SELECT g.genre_id, g.name FROM Genres g " +
-                    "JOIN Film_genre fg ON g.genre_id = fg.genre_id " +
-                    "WHERE fg.film_id = ?";
-            List<Genre> genres = jdbcTemplate.query(sqlGenres, (rs, rowNum) ->
-                    new Genre(rs.getInt("genre_id"), rs.getString("name")), film.getId());
+            String sqlGenres = "SELECT g.genre_id, g.name FROM Genres g " + "JOIN Film_genre fg ON g.genre_id = fg.genre_id " + "WHERE fg.film_id = ?";
+            List<Genre> genres = jdbcTemplate.query(sqlGenres, (rs, rowNum) -> new Genre(rs.getInt("genre_id"), rs.getString("name")), film.getId());
             film.setGenres(genres);
 
             // Загружаем рейтинг
             String sqlMpa = "SELECT mpa_id, name FROM Mpa WHERE mpa_id = ?";
-            Mpa mpa = jdbcTemplate.queryForObject(sqlMpa, (rs, rowNum) ->
-                    new Mpa(rs.getInt("mpa_id"), rs.getString("name")), film.getMpa().getId());
+            Mpa mpa = jdbcTemplate.queryForObject(sqlMpa, (rs, rowNum) -> new Mpa(rs.getInt("mpa_id"), rs.getString("name")), film.getMpa().getId());
             film.setMpa(mpa);
 
             // Загружаем лайки

@@ -47,7 +47,8 @@ public class UserControllerTests {
         assertEquals("test@example.com", createdUser.getEmail());
     }
 
-    @Test public void testCreateUserWithEmptyName() {
+    @Test
+    public void testCreateUserWithEmptyName() {
         User user = new User();
         user.setEmail("test@example.com");
         user.setLogin("testlogin");
@@ -95,7 +96,8 @@ public class UserControllerTests {
         assertEquals("Дата рождения не может быть в будущем", exception.getMessage());
     }
 
-    @Test public void testUpdateUserSuccessfully() {
+    @Test
+    public void testUpdateUserSuccessfully() {
         User initialUser = new User();
         initialUser.setEmail("test@example.com");
         initialUser.setLogin("testlogin");

@@ -12,6 +12,7 @@ import ru.yandex.practicum.filmorate.service.GenreService;
 import ru.yandex.practicum.filmorate.service.MpaService;
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.storage.*;
+
 import static org.mockito.Mockito.mock;
 
 import java.time.LocalDate;
@@ -44,8 +45,8 @@ public class FilmControllerTests {
     }
 
 
-
-    @Test public void testAddFilmSuccessfully() {
+    @Test
+    public void testAddFilmSuccessfully() {
         Film film = new Film();
         film.setName("Film Name");
         film.setDescription("This is a valid description.");
@@ -163,7 +164,6 @@ public class FilmControllerTests {
             filmController.getFilmById(999L);
         });
     }
-
 
 
     @Test

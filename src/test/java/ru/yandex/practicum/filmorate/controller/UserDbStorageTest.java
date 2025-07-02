@@ -30,17 +30,13 @@ class UserDbStorageTest {
         builder.login("user");
         builder.name("User Name");
         builder.birthday(LocalDate.now().minusYears(20));
-        User newUser = builder
-                .build();
+        User newUser = builder.build();
 
         userStorage.createUser(newUser);
 
         User savedUser = userStorage.getUserById(newUser.getId());
 
-        assertThat(savedUser)
-                .isNotNull()
-                .usingRecursiveComparison()
-                .isEqualTo(newUser);
+        assertThat(savedUser).isNotNull().usingRecursiveComparison().isEqualTo(newUser);
     }
 
     @Test
@@ -50,8 +46,7 @@ class UserDbStorageTest {
         builder.login("user");
         builder.name("User Name");
         builder.birthday(LocalDate.now().minusYears(20));
-        User user = builder
-                .build();
+        User user = builder.build();
 
         userStorage.createUser(user);
 
