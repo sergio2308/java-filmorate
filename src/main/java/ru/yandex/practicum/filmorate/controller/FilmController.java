@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
@@ -97,7 +98,7 @@ public class FilmController {
 
         // Проверка рейтинга
         if (film.getMpa() == null || film.getMpa().getId() == null) {
-            throw new ValidationException("Рейтинг не может быть пустым");
+            throw new NotFoundException("Рейтинг не может быть пустым");
         }
 
         // Проверка жанров
