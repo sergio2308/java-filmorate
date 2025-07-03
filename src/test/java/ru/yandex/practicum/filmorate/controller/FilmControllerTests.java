@@ -34,15 +34,15 @@ public class FilmControllerTests {
         FilmDbStorage filmDbStorage = mock(FilmDbStorage.class);
         FilmStorage filmStorage = new InMemoryFilmStorage();
 
-        filmService = new FilmService(jdbcTemplate, filmDbStorage, filmStorage, mpaService, genreService);
+        filmService = new FilmService(filmStorage);
 
         JdbcTemplate jdbcTemplateUser = mock(JdbcTemplate.class);
         UserDbStorage userDbStorage = mock(UserDbStorage.class);
         UserStorage userStorage = new InMemoryUserStorage();
 
-        userService = new UserService(jdbcTemplateUser, userDbStorage, userStorage);
+        userService = new UserService(jdbcTemplateUser, userStorage);
 
-        filmController = new FilmController(filmService, userService, genreService, mpaService);
+        filmController = new FilmController(filmService, userService);
     }
 
 

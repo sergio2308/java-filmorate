@@ -27,8 +27,8 @@ public class UserControllerTests {
         UserDbStorage userDbStorage = mock(UserDbStorage.class);
         InMemoryUserStorage userStorage = new InMemoryUserStorage();
 
-        userService = new UserService(jdbcTemplate, userDbStorage, userStorage);
-        userController = new UserController(jdbcTemplate, userService);
+        userService = new UserService(jdbcTemplate, userStorage);
+        userController = new UserController(userService);
     }
 
     @Test
