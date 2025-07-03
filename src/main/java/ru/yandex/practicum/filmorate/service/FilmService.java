@@ -1,11 +1,9 @@
 package ru.yandex.practicum.filmorate.service;
 
 import lombok.AllArgsConstructor;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.FilmDbStorage;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import java.util.Comparator;
@@ -16,15 +14,7 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class FilmService {
-    private JdbcTemplate jdbcTemplate;
-
-    private FilmDbStorage filmDbStorage;
-
     final FilmStorage filmStorage;
-
-    final MpaService mpaService;
-
-    final GenreService genreService;
 
     public Film addFilm(Film film) {
         return filmStorage.addFilm(film);
@@ -60,9 +50,6 @@ public class FilmService {
     }
 
     public List<Film> getPopularFilms(int count) {
-        return filmStorage.getAllFilms().stream()
-                .sorted(Comparator.comparingInt(film -> -film.getLikes().size()))
-                .limit(count)
-                .collect(Collectors.toList());
+        return filmStorage.getAllFilms().stream().sorted(Comparator.comparingInt(film -> -film.getLikes().size())).limit(count).collect(Collectors.toList());
     }
 }

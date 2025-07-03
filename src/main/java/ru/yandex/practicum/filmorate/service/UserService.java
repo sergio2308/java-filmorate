@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.mapper.UserMapper;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.UserDbStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.List;
@@ -16,8 +15,6 @@ import java.util.Objects;
 @AllArgsConstructor
 public class UserService {
     private JdbcTemplate jdbcTemplate;
-
-    private UserDbStorage userDbStorage;
 
     final UserStorage userStorage;
 
@@ -43,10 +40,6 @@ public class UserService {
     }
 
     public void addFriend(Long userId, Long friendId) {
-        User user = getUserById(userId);
-        User friend = getUserById(friendId);
-
-        // Add to database
         String sql = "INSERT INTO Friends (user_id, friend_id, status) VALUES (?, ?, ?)";
         jdbcTemplate.update(sql, userId, friendId, false);
     }
@@ -60,17 +53,12 @@ public class UserService {
 
     public List<User> getFriends(Long userId) {
         getUserById(userId); // проверка существования пользователя
-        String sql = "SELECT u.* FROM Users u " +
-                "JOIN Friends f ON u.user_id = f.friend_id " +
-                "WHERE f.user_id = ?";
+        String sql = "SELECT u.* FROM Users u " + "JOIN Friends f ON u.user_id = f.friend_id " + "WHERE f.user_id = ?";
         return jdbcTemplate.query(sql, new UserMapper(), userId);
     }
 
     public List<User> getCommonFriends(Long userId, Long otherId) {
-        String sql = "SELECT u.* FROM Users u " +
-                "JOIN Friends f1 ON u.user_id = f1.friend_id " +
-                "JOIN Friends f2 ON u.user_id = f2.friend_id " +
-                "WHERE f1.user_id = ? AND f2.user_id = ?";
+        String sql = "SELECT u.* FROM Users u " + "JOIN Friends f1 ON u.user_id = f1.friend_id " + "JOIN Friends f2 ON u.user_id = f2.friend_id " + "WHERE f1.user_id = ? AND f2.user_id = ?";
         return jdbcTemplate.query(sql, new UserMapper(), userId, otherId);
     }
 }
