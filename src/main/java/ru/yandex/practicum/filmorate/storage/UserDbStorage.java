@@ -65,6 +65,50 @@ public class UserDbStorage implements UserStorage {
         }
     }
 
+    @Override
+    public void addFriend(Long userId, Long friendId) {
+        getUserById(userId);
+        getUserById(friendId);
+
+        String checkSql = "SELECT COUNT(*) FROM Friends WHERE user_id = ? AND friend_id = ?";
+        Integer count = jdbcTemplate.queryForObject(checkSql, Integer.class, userId, friendId);
+
+        if (count == null || count == 0) {
+            String sql = "INSERT INTO Friends (user_id, friend_id, status) VALUES (?, ?, ?)";
+            jdbcTemplate.update(sql, userId, friendId, false);
+        }
+    }
+
+    @Override
+    public void removeFriend(Long userId, Long friendId) {
+        getUserById(userId);
+        getUserById(friendId);
+
+        String sql = "DELETE FROM Friends WHERE user_id = ? AND friend_id = ?";
+        int deleted = jdbcTemplate.update(sql, userId, friendId);
+
+        if (deleted == 0) {
+            throw new NotFoundException(String.format("Friend relation between user %d and friend %d not found", userId, friendId));
+        }
+    }
+
+    @Override
+    public List<User> getFriends(Long userId) {
+        getUserById(userId);
+
+        String sql = "SELECT u.* FROM Users u " + "JOIN Friends f ON u.user_id = f.friend_id " + "WHERE f.user_id = ?";
+        return jdbcTemplate.query(sql, (rs, rowNum) -> mapRowToUser(rs), userId);
+    }
+
+    @Override
+    public List<User> getCommonFriends(Long userId, Long otherId) {
+        getUserById(userId);
+        getUserById(otherId);
+
+        String sql = "SELECT u.* FROM Users u " + "JOIN Friends f1 ON u.user_id = f1.friend_id " + "JOIN Friends f2 ON u.user_id = f2.friend_id " + "WHERE f1.user_id = ? AND f2.user_id = ?";
+        return jdbcTemplate.query(sql, (rs, rowNum) -> mapRowToUser(rs), userId, otherId);
+    }
+
     private User mapRowToUser(ResultSet rs) throws SQLException {
         return User.builder().id(rs.getLong("user_id")).email(rs.getString("email")).login(rs.getString("login")).name(rs.getString("name")).birthday(rs.getDate("birthday").toLocalDate()).build();
     }
