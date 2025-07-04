@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.storage;
 
 import jakarta.validation.constraints.NotNull;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -27,7 +26,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public Film updateFilm(Film film) {
         if (!filmsMap.containsKey(film.getId())) {
-            throw new NotFoundException(HttpStatus.NOT_FOUND, "Фильм не найден с ID: " + film.getId());
+            throw new NotFoundException("Фильм не найден с ID: " + film.getId());
         }
         filmsMap.put(film.getId(), film);
         return film;

@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.service;
 
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -15,7 +14,6 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class FilmService {
-
     final FilmStorage filmStorage;
 
     public Film addFilm(Film film) {
@@ -30,9 +28,9 @@ public class FilmService {
         Film filmById = filmStorage.getFilmById(id);
         if (Objects.isNull(filmById)) {
             String error = String.format("Фильм с id %d не найден", id);
-            throw new NotFoundException(HttpStatus.NOT_FOUND, error);
+            throw new NotFoundException(error);
         }
-       return filmById;
+        return filmById;
     }
 
     public List<Film> getAllFilms() {
@@ -52,9 +50,6 @@ public class FilmService {
     }
 
     public List<Film> getPopularFilms(int count) {
-        return filmStorage.getAllFilms().stream()
-                .sorted(Comparator.comparingInt(film -> -film.getLikes().size()))
-                .limit(count)
-                .collect(Collectors.toList());
+        return filmStorage.getAllFilms().stream().sorted(Comparator.comparingInt(film -> -film.getLikes().size())).limit(count).collect(Collectors.toList());
     }
 }

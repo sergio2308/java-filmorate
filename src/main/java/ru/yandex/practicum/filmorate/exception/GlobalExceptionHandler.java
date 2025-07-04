@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.exception;
 
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,26 +13,26 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(value = NotFoundException.class)
-    @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    public Map<String, String> processNotFound(NotFoundException nfe) {
+    @ExceptionHandler(NotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> handleNotFound(NotFoundException e) {
         HashMap<String, String> response = new HashMap<>();
-        response.put("error", "Не найден");
+        response.put("error", e.getMessage());
         return response;
     }
 
-    @ExceptionHandler(value = ValidationException.class)
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public Map<String, String> processNotValid(ValidationException ve) {
+    @ExceptionHandler(ValidationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> handleValidation(ValidationException e) {
         HashMap<String, String> response = new HashMap<>();
-        response.put("error", "Валидация не пройдена");
+        response.put("error", e.getMessage());
         return response;
     }
 
-    @ExceptionHandler(value = Throwable.class)
-    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
-    public Map<String, String> processAnyException(Throwable te) {
-        log.error("Ошибка: {}", te.getMessage());
+    @ExceptionHandler(Throwable.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Map<String, String> handleOtherExceptions(Throwable e) {
+        log.error("Unexpected error", e);
         HashMap<String, String> response = new HashMap<>();
         response.put("error", "Произошла неизвестная ошибка");
         return response;

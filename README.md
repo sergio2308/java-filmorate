@@ -12,7 +12,7 @@ src/main/java/ru/yandex/practicum/filmorate/images/DBDiagram.png
 Основные таблицы
 Users - хранит информацию о пользователях
 Films - содержит данные о фильмах
-Rating - справочник рейтингов (MPAA)
+Mpa - справочник рейтингов (MPAA)
 Таблицы связей
 Friends - отношения дружбы между пользователями
 Likes - лайки пользователей фильмам
@@ -36,7 +36,7 @@ CREATE TABLE "Films" (
 "description" varchar   NOT NULL,
 "release_date" date   NOT NULL,
 "duration" integer   NOT NULL,
-"rating_id" integer   NOT NULL,
+"mpa_id" integer   NOT NULL,
 CONSTRAINT "pk_Films" PRIMARY KEY (
 "film_id"
 )
@@ -69,10 +69,10 @@ CONSTRAINT "pk_Film_genre" PRIMARY KEY (
 )
 );
 
-CREATE TABLE "Rating" (
-"rating_id" integer   NOT NULL,
+CREATE TABLE "Mpa" (
+"mpa_id" integer   NOT NULL,
 "name" varchar   NOT NULL,
-CONSTRAINT "pk_Rating" PRIMARY KEY (
-"rating_id"
+CONSTRAINT "pk_Mpa" PRIMARY KEY (
+"mpa_id"
 )
 );
