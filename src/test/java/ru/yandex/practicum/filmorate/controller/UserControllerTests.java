@@ -2,17 +2,19 @@ package ru.yandex.practicum.filmorate.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
+import org.springframework.jdbc.core.JdbcTemplate;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.UserDbStorage;
 
 import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 public class UserControllerTests {
 
@@ -21,8 +23,11 @@ public class UserControllerTests {
 
     @BeforeEach
     public void setUp() {
+        JdbcTemplate jdbcTemplate = mock(JdbcTemplate.class);
+        UserDbStorage userDbStorage = mock(UserDbStorage.class);
         InMemoryUserStorage userStorage = new InMemoryUserStorage();
-        userService = new UserService(userStorage);
+
+        userService = new UserService(jdbcTemplate, userStorage);
         userController = new UserController(userService);
     }
 
@@ -41,7 +46,8 @@ public class UserControllerTests {
         assertEquals("test@example.com", createdUser.getEmail());
     }
 
-    @Test public void testCreateUserWithEmptyName() {
+    @Test
+    public void testCreateUserWithEmptyName() {
         User user = new User();
         user.setEmail("test@example.com");
         user.setLogin("testlogin");
@@ -60,8 +66,7 @@ public class UserControllerTests {
         user.setLogin("testlogin");
         user.setBirthday(LocalDate.of(1990, 1, 1));
 
-        ValidationException exception = assertThrows(ValidationException.class, () -> userController.createUser(user));
-        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+        Exception exception = assertThrows(ValidationException.class, () -> userController.createUser(user));
         assertEquals("Недопустимый email", exception.getMessage());
     }
 
@@ -72,8 +77,7 @@ public class UserControllerTests {
         user.setLogin(" ");
         user.setBirthday(LocalDate.of(1990, 1, 1));
 
-        ValidationException exception = assertThrows(ValidationException.class, () -> userController.createUser(user));
-        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+        Exception exception = assertThrows(ValidationException.class, () -> userController.createUser(user));
         assertEquals("Логин не может быть пустым", exception.getMessage());
     }
 
@@ -84,12 +88,12 @@ public class UserControllerTests {
         user.setLogin("testlogin");
         user.setBirthday(LocalDate.now().plusDays(1));
 
-        ValidationException exception = assertThrows(ValidationException.class, () -> userController.createUser(user));
-        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+        Exception exception = assertThrows(ValidationException.class, () -> userController.createUser(user));
         assertEquals("Дата рождения не может быть в будущем", exception.getMessage());
     }
 
-    @Test public void testUpdateUserSuccessfully() {
+    @Test
+    public void testUpdateUserSuccessfully() {
         User initialUser = new User();
         initialUser.setEmail("test@example.com");
         initialUser.setLogin("testlogin");
@@ -118,8 +122,7 @@ public class UserControllerTests {
         user.setLogin("nonexistentlogin");
         user.setBirthday(LocalDate.of(1990, 1, 1));
 
-        NotFoundException exception = assertThrows(NotFoundException.class, () -> userController.updateUser(user));
-        assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());
+        Exception exception = assertThrows(NotFoundException.class, () -> userController.updateUser(user));
         assertEquals("Пользователь не найден с ID: 999", exception.getMessage());
     }
 
